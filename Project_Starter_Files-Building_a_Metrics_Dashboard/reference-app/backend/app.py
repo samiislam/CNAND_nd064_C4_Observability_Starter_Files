@@ -18,6 +18,21 @@ def homepage():
     return "Hello World"
 
 
+@app.route("/healthz")
+def healthz():
+    return jsonify(result="OK backend")
+
+
+@app.route("/create40x")
+def create40x():
+    return ("40x error", 404)
+
+
+@app.route("/create50x")
+def create50x():
+    return ("50x error", 501)
+
+
 @app.route("/api")
 def my_api():
     answer = "something"

@@ -8,5 +8,10 @@ def homepage():
     return render_template("main.html")
 
 
+@app.route("/healthz")
+def healthz():
+    return jsonify(result="OK frontend")
+
+
 if __name__ == "__main__":
     app.run()
