@@ -1,11 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deploy
+  name: backend-deployment
   labels:
-    app: backend
+    name: backend
+    release: prometheus
   annotations:
-    'sidecar.jaegertracing.io/inject': 'true'
+    sidecar.jaegertracing.io/inject: 'true'
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: /metrics
+    prometheus.io/port: backendport
 spec:
   replicas: 3
   selector:
@@ -13,6 +17,7 @@ spec:
       app: backend
   template:
     metadata:
+      name: backend-pod
       labels:
         app: backend
     spec:
@@ -21,31 +26,42 @@ spec:
           image: samiislam/dashboard-backend:v1
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - name: backendport
+              containerPort: 8080
+              protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  labels:
+    app: backend
 spec:
   selector:
     app: backend
   ports:
-    - port: 8081
-      name: web
-      targetPort: 8080
+    - name: backend
+      protocol: TCP
+      port: 8081
+      targetPort: backendport
   type: LoadBalancer
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  labels:
-    release: prometheus
   name: backend-service-monitor
+  namespace: monitoring
+  labels:
+    app: backend
+    release: prometheus
 spec:
   endpoints:
-    - interval: 30s
-      port: web
+    - interval: 15s
+      port: backend
+      path: /metrics
   selector:
     matchLabels:
       app: backend
+  namespaceSelector:
+    matchNames:
+      - default

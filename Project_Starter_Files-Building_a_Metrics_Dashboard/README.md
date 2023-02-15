@@ -43,14 +43,21 @@ _TODO:_ It is important to know why we want to measure certain metrics for our c
 ## Create a Dashboard to measure our SLIs
 
 _TODO:_ Create a dashboard to measure the uptime of the frontend and backend services We will also want to measure to measure 40x and 50x errors. Create a dashboard that show these values over a 24 hour period and take a screenshot.
+![](answer-img/uptime-and-40x-50x-errors.PNG)
 
 ## Tracing our Flask App
 
 _TODO:_ We will create a Jaeger span to measure the processes on the backend. Once you fill in the span, provide a screenshot of it here. Also provide a (screenshot) sample Python file containing a trace and span code used to perform Jaeger traces on the backend service.
+![](answer-img/jaeger-ui.PNG)
+
+![](answer-img/code-get-python-books.PNG)
 
 ## Jaeger in Dashboards
 
 _TODO:_ Now that the trace is running, let's add the metric to our current Grafana dashboard. Once this is completed, provide a screenshot of it here.
+![](answer-img/jaeger-traces-grafana.PNG)
+
+![](answer-img/jaeger-traces-grafana-traceview.PNG)
 
 ## Report Error
 
@@ -58,26 +65,53 @@ _TODO:_ Using the template below, write a trouble ticket for the developers, to 
 
 TROUBLE TICKET
 
-Name:
+Name: Missing URL
 
-Date:
+Date: 11.01.2023
 
-Subject:
+Subject: The URL https://jobs.github.com/positions.json?description=python is missing
 
-Affected Area:
+Affected Area: The job advertisements
 
-Severity:
+Severity: MEDIUM
 
-Description:
+Description: The trial app /app/app.py is trying to access an URL that is not available. The Job Advert UI pane does not include any jobs contained in the missing URL. The following trace span contains all the required information to investigate the ticket.
+
+![](answer-img/trial-error-trace-for-ticket.PNG)
 
 ## Creating SLIs and SLOs
 
 _TODO:_ We want to create an SLO guaranteeing that our application has a 99.95% uptime per month. Name four SLIs that you would use to measure the success of this SLO.
 
+<table>
+<tr><th>SLI</th><th>Description</th><th>Quantification</th></tr>
+<tr><td>Monthly Uptime Percentage</td><td>The percentage of time during a given month that the service was available and able to serve requests</td><td>This can me measured as the number of minutes the service was down during the month divided by the total number of minutes in the month</td></tr>
+<tr><td>Request Success Rate</td><td>The percentage of requests made to the service that are successfully completed without error</td><td>This can be measured as the number of requests made to the service and the number of requests that were successful</td></tr>
+<tr><td>Latency</td><td>The measure of how long it takes for a request to be completed once it is received by the service</td><td>This can be measured in seconds as the time it takes from when the request is received to when a response is sent</td></tr>
+<tr><td>Error Rate</td><td>The percentage of requests made to the service that result in an error</td><td>This can be measured as the number of requests made to the service and the number of requests that resulted in an error</td></tr>
+</table>
+
 ## Building KPIs for our plan
 
 _TODO_: Now that we have our SLIs and SLOs, create a list of 2-3 KPIs to accurately measure these metrics as well as a description of why those KPIs were chosen. We will make a dashboard for this, but first write them down here.
 
+<table>
+<tr><th>KPI</th><th>Description</th></tr>
+<tr><td>Monthly Uptime Percentage: KPI is a threshold of 99.95% uptime</td><td>Chosen because it aligns with the SLO of 99.95% uptime per month. Setting this threshold allows us to monitor the service against the SLO and any instances of the service falling below this threshold can be identified and addressed</td></tr>
+<tr><td>Request Success Rate: KPI is a threshold of 99.9%</td><td>Chosen because it represents a very high success rate and a small percentage of failures, which would indicate that the service is performing well and providing a good user experience</td></tr>
+<tr><td>Latency: KPI is a threshold of 200 ms</td><td>Chosen because it represents a relatively low latency that would be considered acceptable for may types of web applications. This also indicates that the service provides a responsive and performant experience to users</td></tr>
+</table>
+
 ## Final Dashboard
 
 _TODO_: Create a Dashboard containing graphs that capture all the metrics of your KPIs and adequately representing your SLIs and SLOs. Include a screenshot of the dashboard here, and write a text description of what graphs are represented in the dashboard.
+
+![](answer-img/uptime-slo.PNG)
+
+<table>
+<tr><th>SLI</th><th>Description</th></tr>
+<tr><td>Uptime</td><td>The percentage of time during a given month that the service was available and able to serve requests (0/1 scale)</td></tr>
+<tr><td>Request Success Rate</td><td>The percentage of requests made to the service that are successfully completed without error</td></tr>
+<tr><td>Latency</td><td>The measure of how long it takes for a request to be completed once it is received by the service</td></tr>
+<tr><td>Error Rate</td><td>The percentage of requests made to the service that result in an error</td></tr>
+</table>

@@ -18,7 +18,7 @@ RequestsInstrumentor().instrument()
 
 metrics = PrometheusMetrics(app)
 # static information as metric
-metrics.info("app_info", "Application info", version="1.0.3")
+metrics.info("app_info", "Trial Application", version="1.0.0")
 
 logging.getLogger("").handlers = []
 logging.basicConfig(format="%(message)s", level=logging.DEBUG)
@@ -63,8 +63,10 @@ def trace():
         return tag.sub("", text)
 
     with tracer.start_span("get-python-jobs") as span:
-        res = requests.get(
-            "https://jobs.github.com/positions.json?description=python")
+        url = 'https://jobs.github.com/positions.json?description=python'
+        res = requests.get(url)
+        span.set_tag('http.url', url)
+        span.set_tag('http.status_code', res.status_code)
         span.log_kv({"event": "get jobs count", "count": len(res.json())})
         span.set_tag("jobs-count", len(res.json()))
 
